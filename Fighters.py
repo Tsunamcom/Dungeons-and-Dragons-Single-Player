@@ -9,18 +9,6 @@ import TABLES
 
 #********************************CLASSES********************************
 
-#class Creature():        **************DEAD CODE - SAVING FOR A LITTLE BIT*************
-#    def __init__(self, base_stats):
-#        #/These stats will be replaced by Point Buy System once created\
-#        self.base_str = base_stats['STR']
-#        self.base_dex = base_stats['DEX']
-#        self.base_con = base_stats['CON']
-#        self.base_wis = base_stats['WIS']
-#        self.base_int = base_stats['INT']
-#        self.base_cha = base_stats['CHA']
-
-
-
 class Class():
     def __init__(self, class_import):
         self.class_name = class_import['Class Name']
