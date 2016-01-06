@@ -1,14 +1,10 @@
 import random
 import math
+import re
 import TABLES
-
-
 
 #from tkinter import *  #Will be adding a GUI to select stats and show player/npc activity
 
-#**************************GLOBAL TABLES/DICTS**************************
-#see TABLES.py
-weapons_table = TABLES.weapons_table
 
 #********************************CLASSES********************************
 class Creature():
@@ -29,6 +25,10 @@ class Class():
         self.class_level = class_import['Class Level']
         self.start_hp = class_import['Start HP']
         self.hp_per_level = class_import['HP Per Level']
+        self.armor = class_import['Armor']
+        self.currently_equipped = class_import['Weapon Name']
+        self.weapon_damage = class_import['Weapon Damage']
+        self.weapon_magic_bonus = class_import['Weapon Magic Bonus']
 
 
 
@@ -43,12 +43,12 @@ class AbilityStats():
         self.cha_stat = race['Cha Bonus']+base.base_cha
 
         #Defining Total Player Mod Values (create def?)
-        self.str_mod = (self.str_stat-10)//2
-        self.dex_mod = (self.dex_stat-10)//2
-        self.con_mod = (self.con_stat-10)//2
-        self.wis_mod = (self.wis_stat-10)//2
-        self.int_mod = (self.int_stat-10)//2
-        self.cha_mod = (self.cha_stat-10)//2
+#        self.str_mod = (self.str_stat-10)//2
+#        self.dex_mod = (self.dex_stat-10)//2
+#        self.con_mod = (self.con_stat-10)//2
+#        self.wis_mod = (self.wis_stat-10)//2
+#        self.int_mod = (self.int_stat-10)//2
+#        self.cha_mod = (self.cha_stat-10)//2
 
 
     def get_stat(self, stat):
@@ -89,7 +89,7 @@ class Player():
         #example: character = Player('Player Name',race, class, AbilityStats(race, creature_stats))
         self.name = name
         self.race = race
-        self.p_class = p_class.class_name
+        self.p_class = p_class
         self.stats = stats
 
         #Defined by Class Starting HP and HP per Level gains
@@ -133,26 +133,7 @@ class Player():
             print('You can not move there!')
 
 
-
-#IGNORE OLD_RACE - KEEPING FOR A LITTLE WHILE IN CASE I WANT TO USE IT FOR SOMETHING LATER
-def old_Race():
-#class Race():
-#    def __init__(self, race):
-#        self.race_name = race['Name']
-#        self.size_race = race['Size']
-#        self.speed_race = race['Speed']
-#        #Adding Base Values to Race Bonus Values for total Value
-#        self.str_race = race['Str Bonus']
-#        self.dex_race = race['Dex Bonus']
-#        self.con_race = race['Con Bonus']
-#        self.wis_race = race['Wis Bonus']
-#        self.int_race = race['Int Bonus']
-#        self.cha_race = race['Cha Bonus']
-#        self.languages_race = race['Languages']
-#        self.vision = race['Vision']
-    pass
-
-
+#*************************************************************************
 #********************************FUNCTIONS********************************
 
 #Double Movement on every other diagonal
@@ -169,14 +150,44 @@ def weapon_recall():
             for xxx in weapons_table[x][xx]:
                 print('        ', xxx,':', weapons_table[x][xx][xxx])
 
+def attack_roll(player_or_npc, weapon):
+    if weapon == player_or_npc.p_class.currently_equipped:
+        print('%s attacks with a %s!' % (player_or_npc.name, player_or_npc.p_class.currently_equipped))
+        attack_dice = int(random.randrange(1,21))
+        attack = attack_dice+player_or_npc.stats.get_mod('STR')
+        print('Attack:  %s + %s: %s' % (attack_dice, player_or_npc.stats.get_mod('STR'), attack))
+        return attack
+    else: print('You do not have a %s equipped!' % weapon)
+
+def attack_damage(attacker, defender):
+    pass
+
+
+
+
+
+#*************************************************************************************
 #********************************PLAYER/NPC ASSIGNMENT********************************
 
 
 
-base_stats = {'STR':10, 'DEX':10, 'CON':10, 'WIS':10, 'INT': 10, 'CHA':10}
 
-#*****Assigning Creature Stats*****
-creature_stats = Creature(base_stats)  #Will be determined by a separate menu later (GUI Input)
+
+
+#***********************************************************************
+#**************************GLOBAL TABLES/DICTS**************************
+#see TABLES.py
+
+weapons_table = TABLES.weapons_table
+
+#**********Assigning Creature Stats***********
+  #Will be determined by a separate menu later (GUI Input)
+base_stats = {'STR':10, 'DEX':10, 'CON':10, 'WIS':10, 'INT': 10, 'CHA':10}
+creature_stats = Creature(base_stats)
+
+#Need to add more attributes such as proficiencies and skills, attacks - import to Class()
+fighter = TABLES.fighter
+barbarian = TABLES.barbarian
 
 #*****Races (see TABLES.py)- will add more options later (proficiencies, bonus skills/abilities)*****
 human_race = TABLES.hr1
@@ -185,13 +196,8 @@ elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
 
-#Need to add more attributes such as proficiencies and skills, attacks - import to Class()
-fighter = TABLES.fighter
-barbarian = TABLES.barbarian
-
-
-
-#*************TESTING************
+#*******************************************************************************
+#***********************************TESTING*************************************
 
 p1 = Player('Test Guy', human_race, Class(fighter), AbilityStats(human_race, creature_stats))
 print(p1.name)
@@ -205,3 +211,7 @@ print(p1.stats.get_mod('STR'))
 print(p1.max_hp())
 p1.level += 1
 print(p1.max_hp())
+print(p1.race['Vision'])
+
+attack_roll(p1, 'Greatsword')
+attack_roll(p1, 'Dummy Sword')
