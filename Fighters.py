@@ -42,15 +42,6 @@ class AbilityStats():
         self.int_stat = race['Int Bonus']+base.base_int
         self.cha_stat = race['Cha Bonus']+base.base_cha
 
-        #Defining Total Player Mod Values (create def?)
-#        self.str_mod = (self.str_stat-10)//2
-#        self.dex_mod = (self.dex_stat-10)//2
-#        self.con_mod = (self.con_stat-10)//2
-#        self.wis_mod = (self.wis_stat-10)//2
-#        self.int_mod = (self.int_stat-10)//2
-#        self.cha_mod = (self.cha_stat-10)//2
-
-
     def get_stat(self, stat):
         if stat == 'STR':
             return self.str_stat
