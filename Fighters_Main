@@ -12,23 +12,23 @@ weapons_table = TABLES.weapons_table
 
 #********************************CLASSES********************************
 class Creature():
-    def __init__(self, base_str=10, base_dex=10, base_con=10, base_wis=10, base_int=10, base_cha=10):
+    def __init__(self, base_stats):
         #/These stats will be replaced by Point Buy System once created\
-        self.base_str = base_str
-        self.base_dex = base_dex
-        self.base_con = base_con
-        self.base_wis = base_wis
-        self.base_int = base_int
-        self.base_cha = base_cha
+        self.base_str = base_stats['STR']
+        self.base_dex = base_stats['DEX']
+        self.base_con = base_stats['CON']
+        self.base_wis = base_stats['WIS']
+        self.base_int = base_stats['INT']
+        self.base_cha = base_stats['CHA']
 
 
 
 class Class():
-    def __init__(self, class_name, class_level, start_hp, hp_per_level):
-        self.class_name = class_name
-        self.class_level = class_level
-        self.start_hp = start_hp
-        self.hp_per_level = hp_per_level
+    def __init__(self, class_import):
+        self.class_name = class_import['Class Name']
+        self.class_level = class_import['Class Level']
+        self.start_hp = class_import['Start HP']
+        self.hp_per_level = class_import['HP Per Level']
 
 
 
@@ -173,29 +173,27 @@ def weapon_recall():
 
 
 
-
+base_stats = {'STR':10, 'DEX':10, 'CON':10, 'WIS':10, 'INT': 10, 'CHA':10}
 
 #*****Assigning Creature Stats*****
-creature_stats = Creature(base_str=14, base_wis=12, base_cha=8)  #Will be determined by a separate menu later (GUI Input)
+creature_stats = Creature(base_stats)  #Will be determined by a separate menu later (GUI Input)
 
 #*****Races (see TABLES.py)- will add more options later (proficiencies, bonus skills/abilities)*****
-
 human_race = TABLES.hr1
 elf_high = TABLES.erh1
 elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
 
-#*****Class('Class Name', Class Level, Starting HP, HP Per Level)*****
-#Need to add more attributes such as proficiencies and skills, attacks
-fighter = Class('Fighter', 1, 10, 6)
-barbarian = Class('Barbarian',1, 12, 7)
+#Need to add more attributes such as proficiencies and skills, attacks - import to Class()
+fighter = TABLES.fighter
+barbarian = TABLES.barbarian
 
 
 
 #*************TESTING************
 
-p1 = Player('Test Guy', human_race, fighter, AbilityStats(human_race, creature_stats))
+p1 = Player('Test Guy', human_race, Class(fighter), AbilityStats(human_race, creature_stats))
 print(p1.name)
 p2 = AbilityStats(human_race, creature_stats)
 print(p1.race)
@@ -204,34 +202,6 @@ print(p1.stats.get_mod('STR'))
 p1.stats.str_stat +=1
 print(p1.stats.get_stat('STR'))
 print(p1.stats.get_mod('STR'))
-
-
-
-#*****************TEST EXAMPLES*********************
-"""
-abc = {'Name':'Human', 'Age': 30}
-bcd = {'Name':'Not Human', 'Age': 99}
-print(abc)
-print(bcd)
-
-class Test():
-    def __init__(self, dict):
-        self.name = dict['Name']
-        self.age = dict['Age']
-
-test_1 = Test(bcd)
-print(test_1.name)
-print(test_1.age)
-"""  #IMPORTING A DICT TO A CLASS AND ASSIGNING VALUES
-
-"""
-list1 = []
-list2 = []
-for x in range(10):list1.append(x)
-for x in range(10):list2.append(x)
-print(list1)
-print(list2)
-dict1 = dict(zip(list1, list2))  #creating a dict
-print(dict1)  #printing the newly created dict
-print({k: v for k, v in zip(list1, list2)})  #showing the same keys, values inside a dict, but not creating a dict
-"""  #MERGING TWO LISTS INTO A DICT EXAMPLE
+print(p1.max_hp())
+p1.level += 1
+print(p1.max_hp())
