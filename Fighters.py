@@ -1,21 +1,23 @@
 import random
 import math
 import re
+import pickle
 import TABLES
 
 #from tkinter import *  #Will be adding a GUI to select stats and show player/npc activity
 
 
 #********************************CLASSES********************************
-class Creature():
-    def __init__(self, base_stats):
-        #/These stats will be replaced by Point Buy System once created\
-        self.base_str = base_stats['STR']
-        self.base_dex = base_stats['DEX']
-        self.base_con = base_stats['CON']
-        self.base_wis = base_stats['WIS']
-        self.base_int = base_stats['INT']
-        self.base_cha = base_stats['CHA']
+
+#class Creature():        **************DEAD CODE - SAVING FOR A LITTLE BIT*************
+#    def __init__(self, base_stats):
+#        #/These stats will be replaced by Point Buy System once created\
+#        self.base_str = base_stats['STR']
+#        self.base_dex = base_stats['DEX']
+#        self.base_con = base_stats['CON']
+#        self.base_wis = base_stats['WIS']
+#        self.base_int = base_stats['INT']
+#        self.base_cha = base_stats['CHA']
 
 
 
@@ -35,12 +37,12 @@ class Class():
 class AbilityStats():
     def __init__(self, race, base):
         #Defining Total Player Ability Values (create def?)
-        self.str_stat = race['Str Bonus']+base.base_str
-        self.dex_stat = race['Dex Bonus']+base.base_dex
-        self.con_stat = race['Con Bonus']+base.base_con
-        self.wis_stat = race['Wis Bonus']+base.base_wis
-        self.int_stat = race['Int Bonus']+base.base_int
-        self.cha_stat = race['Cha Bonus']+base.base_cha
+        self.str_stat = race['Str Bonus']+base['STR']
+        self.dex_stat = race['Dex Bonus']+base['DEX']
+        self.con_stat = race['Con Bonus']+base['CON']
+        self.wis_stat = race['Wis Bonus']+base['WIS']
+        self.int_stat = race['Int Bonus']+base['INT']
+        self.cha_stat = race['Cha Bonus']+base['CHA']
 
     def get_stat(self, stat):
         if stat == 'STR':
@@ -174,7 +176,7 @@ weapons_table = TABLES.weapons_table
 #**********Assigning Creature Stats***********
   #Will be determined by a separate menu later (GUI Input)
 base_stats = {'STR':10, 'DEX':10, 'CON':10, 'WIS':10, 'INT': 10, 'CHA':10}
-creature_stats = Creature(base_stats)
+#creature_stats = Creature(base_stats)
 
 #Need to add more attributes such as proficiencies and skills, attacks - import to Class()
 fighter = TABLES.fighter
@@ -187,12 +189,13 @@ elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
 
+
 #*******************************************************************************
 #***********************************TESTING*************************************
 
-p1 = Player('Test Guy', human_race, Class(fighter), AbilityStats(human_race, creature_stats))
+p1 = Player('Test Guy', human_race, Class(fighter), AbilityStats(human_race, base_stats))
 print(p1.name)
-p2 = AbilityStats(human_race, creature_stats)
+p2 = AbilityStats(human_race, base_stats)
 print(p1.race)
 print(p1.stats.get_stat('STR'))
 print(p1.stats.get_mod('STR'))
