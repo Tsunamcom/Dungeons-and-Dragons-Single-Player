@@ -1,7 +1,6 @@
 import random
 import math
 import re
-import pickle
 import TABLES
 
 #from tkinter import *  #Will be adding a GUI to select stats and show player/npc activity
@@ -9,28 +8,24 @@ import TABLES
 
 #********************************CLASSES********************************
 
-class Class():
-    def __init__(self, class_import):
-        self.class_name = class_import['Class Name']
-        self.class_level = class_import['Class Level']
-        self.start_hp = class_import['Start HP']
-        self.hp_per_level = class_import['HP Per Level']
-        self.armor = class_import['Armor']
-        self.currently_equipped = class_import['Weapon Name']
-        self.weapon_damage = class_import['Weapon Damage']
-        self.weapon_magic_bonus = class_import['Weapon Magic Bonus']
-
-
 
 class AbilityStats():
-    def __init__(self, race, base):
-        #Defining Total Player Ability Values (create def?)
-        self.str_stat = race['Str Bonus']+base['STR']
-        self.dex_stat = race['Dex Bonus']+base['DEX']
-        self.con_stat = race['Con Bonus']+base['CON']
-        self.wis_stat = race['Wis Bonus']+base['WIS']
-        self.int_stat = race['Int Bonus']+base['INT']
-        self.cha_stat = race['Cha Bonus']+base['CHA']
+    def __init__(self, STR, DEX, CON, WIS, INT, CHA):
+        self.str_stat = STR
+        self.dex_stat = DEX
+        self.con_stat = CON
+        self.wis_stat = WIS
+        self.int_stat = INT
+        self.cha_stat = CHA
+
+    def __add__(self, other):
+        self.str_stat = self.str_stat + other.str_stat
+        self.dex_stat = self.dex_stat + other.dex_stat
+        self.con_stat = self.con_stat + other.con_stat
+        self.wis_stat = self.wis_stat + other.wis_stat
+        self.int_stat = self.int_stat + other.int_stat
+        self.cha_stat = self.cha_stat + other.cha_stat  #THIS IS PROBABLY WRONG\\\
+        return AbilityStats(self.str_stat, self.dex_stat, self.con_stat, self.wis_stat, self.int_stat, self.cha_stat)
 
     def get_stat(self, stat):
         if stat == 'STR':
@@ -61,6 +56,19 @@ class AbilityStats():
         elif stat == 'CHA':
             return (self.cha_stat-10)//2
         else: print('NOT A VALID OPTION')
+
+
+
+class Class():
+    def __init__(self, class_import):
+        self.class_name = class_import['Class Name']
+        self.class_level = class_import['Class Level']
+        self.start_hp = class_import['Start HP']
+        self.hp_per_level = class_import['HP Per Level']
+        self.armor = class_import['Armor']
+        self.currently_equipped = class_import['Weapon Name']
+        self.weapon_damage = class_import['Weapon Damage']
+        self.weapon_magic_bonus = class_import['Weapon Magic Bonus']
 
 
 
@@ -164,7 +172,7 @@ weapons_table = TABLES.weapons_table
 #**********Assigning Creature Stats***********
   #Will be determined by a separate menu later (GUI Input)
 base_stats = {'STR':10, 'DEX':10, 'CON':10, 'WIS':10, 'INT': 10, 'CHA':10}
-#creature_stats = Creature(base_stats)
+
 
 #Need to add more attributes such as proficiencies and skills, attacks - import to Class()
 fighter = TABLES.fighter
@@ -176,24 +184,10 @@ elf_high = TABLES.erh1
 elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
+p1 = AbilityStats(10,10,10,10,10,10)
+print(p1.str_stat)
+p2 = AbilityStats(1,1,1,1,1,1)
+print(p2.str_stat)
+p3 = p1+p2
+print(p3.get_stat('STR'))
 
-
-#*******************************************************************************
-#***********************************TESTING*************************************
-
-p1 = Player('Test Guy', human_race, Class(fighter), AbilityStats(human_race, base_stats))
-print(p1.name)
-p2 = AbilityStats(human_race, base_stats)
-print(p1.race)
-print(p1.stats.get_stat('STR'))
-print(p1.stats.get_mod('STR'))
-p1.stats.str_stat +=1
-print(p1.stats.get_stat('STR'))
-print(p1.stats.get_mod('STR'))
-print(p1.max_hp())
-p1.level += 1
-print(p1.max_hp())
-print(p1.race['Vision'])
-
-attack_roll(p1, 'Greatsword')
-attack_roll(p1, 'Dummy Sword')
