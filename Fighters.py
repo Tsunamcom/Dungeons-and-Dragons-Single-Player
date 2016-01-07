@@ -24,7 +24,7 @@ class AbilityStats():
         self.con_stat = self.con_stat + other.con_stat
         self.wis_stat = self.wis_stat + other.wis_stat
         self.int_stat = self.int_stat + other.int_stat
-        self.cha_stat = self.cha_stat + other.cha_stat  #THIS IS PROBABLY WRONG\\\
+        self.cha_stat = self.cha_stat + other.cha_stat
         return AbilityStats(self.str_stat, self.dex_stat, self.con_stat, self.wis_stat, self.int_stat, self.cha_stat)
 
     def get_stat(self, stat):
