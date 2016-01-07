@@ -7,13 +7,13 @@ import TABLES
 #********************************CLASSES********************************
 
 class AbilityStats():
-    def __init__(self, STR, DEX, CON, WIS, INT, CHA):
-        self.str_stat = STR
-        self.dex_stat = DEX
-        self.con_stat = CON
-        self.wis_stat = WIS
-        self.int_stat = INT
-        self.cha_stat = CHA
+    def __init__(self, common=10, strength=0, dexterity=0, constitution=0, wisdom=0, intelligence=0, charisma=0):
+        self.str_stat = common+strength
+        self.dex_stat = common+dexterity
+        self.con_stat = common+constitution
+        self.wis_stat = common+wisdom
+        self.int_stat = common+intelligence
+        self.cha_stat = common+charisma
 
     def __add__(self, other):
         STR = self.str_stat + other.str_stat
@@ -172,7 +172,7 @@ weapons_table = TABLES.weapons_table
 
 #**********Assigning Creature Stats***********
   #Will be determined by a separate menu later (GUI Input)
-base_stats = {'STR':10, 'DEX':10, 'CON':10, 'WIS':10, 'INT': 10, 'CHA':10}
+#base_stats = {'STR':10, 'DEX':10, 'CON':10, 'WIS':10, 'INT': 10, 'CHA':10}
 
 
 #Need to add more attributes such as proficiencies and skills, attacks - import to Class()
@@ -188,32 +188,9 @@ elf_dark = TABLES.erd1
 
 
 #AblityStats() Testing:
-a = AbilityStats(10,10,10,10,10,10)
-b = AbilityStats(1,1,1,1,1,1)
-c = a+b
+
+
+a = AbilityStats(common=10, strength=2, dexterity=1)
 print(a.get_stat('STR'))
-print(b.get_stat('STR'))
-print(c.get_stat('STR'))
-
-
-
-#*******************************************************************************
-#***********************************TESTING*************************************
-
-
-
-player_1 = Player('Test Guy 1', human_race, Class(fighter), c)
-
-print(player_1.p_class.hp_per_level)
-print(player_1.stats.get_stat('STR'))
-print(player_1.stats.get_mod('DEX'))
-player_1.stats.str_stat += 1
-print(player_1.stats.get_stat('STR'))
-print(player_1.race['Vision'])
-print(player_1.race['Size'])
-
-test_stats(player_1)
-
-player_1.name = 'Stoic Heroic'
-
-test_stats(player_1)
+print(a.get_stat('DEX'))
+print(a.get_stat('CHA'))
