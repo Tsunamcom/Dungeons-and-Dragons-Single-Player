@@ -202,7 +202,7 @@ print(c.get_stat('STR'))
 
 
 
-player_1 = Player('Test Guy 1', human_race, Class(fighter), stats_total)
+player_1 = Player('Test Guy 1', human_race, Class(fighter), c)
 
 print(player_1.p_class.hp_per_level)
 print(player_1.stats.get_stat('STR'))
