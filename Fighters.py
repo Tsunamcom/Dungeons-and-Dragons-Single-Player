@@ -7,7 +7,7 @@ import TABLES
 #********************************CLASSES********************************
 
 class AbilityStats():
-    def __init__(self, common=10, strength=0, dexterity=0, constitution=0, wisdom=0, intelligence=0, charisma=0):
+    def __init__(self, common=0, strength=0, dexterity=0, constitution=0, wisdom=0, intelligence=0, charisma=0):
         self.str_stat = common+strength
         self.dex_stat = common+dexterity
         self.con_stat = common+constitution
@@ -22,7 +22,13 @@ class AbilityStats():
         WIS = self.wis_stat + other.wis_stat
         INT = self.int_stat + other.int_stat
         CHA = self.cha_stat + other.cha_stat
-        return AbilityStats(STR, DEX, CON, WIS, INT, CHA)
+        return AbilityStats(0,STR, DEX, CON, WIS, INT, CHA)
+
+    def __radd__(self, other):
+        if other == 0:
+            return self
+        else:
+            return self.__add__(other)
 
     def get_stat(self, stat):
         if stat == 'STR':
@@ -154,14 +160,8 @@ def test_stats(player_1):
     player_1.p_class.currently_equipped, player_1.p_class.weapon_damage
     ))
 
-
-
 #*************************************************************************************
 #********************************PLAYER/NPC ASSIGNMENT********************************
-
-
-
-
 
 
 #***********************************************************************
@@ -171,8 +171,6 @@ def test_stats(player_1):
 weapons_table = TABLES.weapons_table
 
 #**********Assigning Creature Stats***********
-  #Will be determined by a separate menu later (GUI Input)
-#base_stats = {'STR':10, 'DEX':10, 'CON':10, 'WIS':10, 'INT': 10, 'CHA':10}
 
 
 #Need to add more attributes such as proficiencies and skills, attacks - import to Class()
@@ -189,8 +187,48 @@ elf_dark = TABLES.erd1
 
 #AblityStats() Testing:
 
+base_stats = AbilityStats(common=10, strength=2, dexterity=1)
+print(base_stats.get_stat('STR'))
 
-a = AbilityStats(common=10, strength=2, dexterity=1)
-print(a.get_stat('STR'))
-print(a.get_stat('DEX'))
-print(a.get_stat('CHA'))
+start_stats = AbilityStats(common=1)
+print(start_stats.get_stat('STR'))
+
+level4_stats = AbilityStats(dexterity=1, constitution=1)
+print(level4_stats.get_stat('STR'))
+
+level8_stats = AbilityStats(dexterity=2)
+print(level8_stats.get_stat('STR'),'\n')
+
+
+player_stats = base_stats+\
+               start_stats+\
+               level4_stats+\
+               level8_stats
+
+print(player_stats.get_stat('STR'))
+
+
+
+
+
+#*******************************************************************************
+#***********************************TESTING*************************************
+
+
+
+player_1 = Player('Test Guy 1', human_race, Class(fighter), player_stats)
+
+print(player_1.p_class.hp_per_level)
+print(player_1.stats.get_stat('STR'))
+print(player_1.stats.get_mod('DEX'))
+player_1.stats.str_stat += 1
+print(player_1.stats.get_stat('STR'))
+print(player_1.race['Vision'])
+print(player_1.race['Size'])
+
+test_stats(player_1)
+
+player_1.name = 'Stoic Heroic'
+
+test_stats(player_1)
+
