@@ -3,11 +3,8 @@ import math
 import re
 import TABLES
 
-#from tkinter import *  #Will be adding a GUI to select stats and show player/npc activity
-
 
 #********************************CLASSES********************************
-
 
 class AbilityStats():
     def __init__(self, STR, DEX, CON, WIS, INT, CHA):
@@ -75,7 +72,7 @@ class Class():
 class Player():
     def __init__(self, name, race, p_class, stats):
         #Defined by creating the character:
-        #example: character = Player('Player Name',race, class, AbilityStats(race, creature_stats))
+        #example: character = Player('Player Name',race, Class(class_name), stats_total))
         self.name = name
         self.race = race
         self.p_class = p_class
@@ -184,10 +181,34 @@ elf_high = TABLES.erh1
 elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
-p1 = AbilityStats(10,10,10,10,10,10)
-print(p1.str_stat)
-p2 = AbilityStats(1,1,1,1,1,1)
-print(p2.str_stat)
-p3 = p1+p2
-print(p3.get_stat('STR'))
 
+
+#AblityStats() Testing:
+stats_base = AbilityStats(10,10,10,10,10,10)
+print(stats_base.str_stat)
+stats_race = AbilityStats(1,1,1,1,1,1)
+print(stats_race.str_stat)
+stats_total = stats_base+stats_race
+print(stats_total.get_stat('STR'))
+
+
+
+
+#*******************************************************************************
+#***********************************TESTING*************************************
+
+
+
+player_1 = Player('Test Guy 1', human_race, Class(fighter), stats_total)
+
+print(player_1.p_class.hp_per_level)
+print(player_1.stats.get_stat('STR'))
+print(player_1.stats.get_mod('DEX'))
+player_1.stats.str_stat += 1
+print(player_1.stats.get_stat('STR'))
+print(player_1.race['Vision'])
+print(player_1.race['Size'])
+print('%s is a %s %s.  He carries a %s that deals %s Damage on a hit.' % (
+    player_1.name, player_1.race['Name'], player_1.p_class.class_name,
+    player_1.p_class.currently_equipped, player_1.p_class.weapon_damage
+))
