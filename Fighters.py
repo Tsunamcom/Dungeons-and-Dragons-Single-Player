@@ -16,13 +16,13 @@ class AbilityStats():
         self.cha_stat = CHA
 
     def __add__(self, other):
-        self.str_stat = self.str_stat + other.str_stat
-        self.dex_stat = self.dex_stat + other.dex_stat
-        self.con_stat = self.con_stat + other.con_stat
-        self.wis_stat = self.wis_stat + other.wis_stat
-        self.int_stat = self.int_stat + other.int_stat
-        self.cha_stat = self.cha_stat + other.cha_stat
-        return AbilityStats(self.str_stat, self.dex_stat, self.con_stat, self.wis_stat, self.int_stat, self.cha_stat)
+        STR = self.str_stat + other.str_stat
+        DEX = self.dex_stat + other.dex_stat
+        CON = self.con_stat + other.con_stat
+        WIS = self.wis_stat + other.wis_stat
+        INT = self.int_stat + other.int_stat
+        CHA = self.cha_stat + other.cha_stat
+        return AbilityStats(STR, DEX, CON, WIS, INT, CHA)
 
     def get_stat(self, stat):
         if stat == 'STR':
@@ -148,7 +148,11 @@ def attack_roll(player_or_npc, weapon):
 def attack_damage(attacker, defender):
     pass
 
-
+def test_stats(player_1):
+    print('%s is a %s %s.  He carries a %s that deals %s Damage on a hit.' % (
+    player_1.name, player_1.race['Name'], player_1.p_class.class_name,
+    player_1.p_class.currently_equipped, player_1.p_class.weapon_damage
+    ))
 
 
 
@@ -184,13 +188,12 @@ elf_dark = TABLES.erd1
 
 
 #AblityStats() Testing:
-stats_base = AbilityStats(10,10,10,10,10,10)
-print(stats_base.str_stat)
-stats_race = AbilityStats(1,1,1,1,1,1)
-print(stats_race.str_stat)
-stats_total = stats_base+stats_race
-print(stats_total.get_stat('STR'))
-
+a = AbilityStats(10,10,10,10,10,10)
+b = AbilityStats(1,1,1,1,1,1)
+c = a+b
+print(a.get_stat('STR'))
+print(b.get_stat('STR'))
+print(c.get_stat('STR'))
 
 
 
@@ -208,7 +211,9 @@ player_1.stats.str_stat += 1
 print(player_1.stats.get_stat('STR'))
 print(player_1.race['Vision'])
 print(player_1.race['Size'])
-print('%s is a %s %s.  He carries a %s that deals %s Damage on a hit.' % (
-    player_1.name, player_1.race['Name'], player_1.p_class.class_name,
-    player_1.p_class.currently_equipped, player_1.p_class.weapon_damage
-))
+
+test_stats(player_1)
+
+player_1.name = 'Stoic Heroic'
+
+test_stats(player_1)
