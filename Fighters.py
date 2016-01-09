@@ -9,59 +9,24 @@ import TABLES       #TABLES.py - stores all character/creature dicts/lists/table
 #  Build GUI Interface for Player stats, race, and class selection and storage [start with input('')]
 #  Expand race and class stats in TABLES
 #  Create either Attack() or def Attacks in Class() - replace global function for attack_roll()
-#  
+#
 #   --ENEMIES--
 #  Create Enemy() class, also define a few enemy options/stats (Kobold, Wolf, etc)
 #  Create Conditions() class (Slowed, Blinded, Prone, etc), import to Player/Creature
 #  Create NPC generator function (max 3 enemies until Player 2/NPC)
 #
 #   --WORLD--
-
 #  Differentiate Melee vs. Ranged attacks
 #  Determine Advantage/Disadvantage possibilities (dict?)
 #  Set up Turn-Based scenarios between Player and (any/all) enemies currently on the board
-#  Set up overall GUI for game [left panel(Player),middle large panel (grid/board), right panel(Enemy/Enemies)] 
-
-
-
-
-
-
-
-
-#**************************TABLE OF CONTENTS****************************
-#***************************(in code order)*****************************
-
-#  CLASSES:
-#    AbilityStats()    //Defines player/creature ability stats, allows for __add__
-#    Class()           //Allows player to assign class stats (fighter, wizard, etc)
-#    Player()          //Combines all stats to allow creation of Player
-#-------------------------------------------------------------------------------------------
-#  FUNCTIONS:
-#    distance_calc_eucl(creature_1, creature2)  //Calculates the distance between two creatures
-#    weapon_recall()                            //Provides a breakdown of stored weapons
-#    attack_roll(player_or_npc, weapon)         //Provides an attack roll, determines if weapon is held
-#    attack_sequence(attacker, defender)        //Determine if hit, HP, Player/Creature death, Damage
-#    test_stats(player_1)                       //For debugging purposes, tests all stats
-#-------------------------------------------------------------------------------------------
-#  TABLES/DICTS/GLOBALS  (see TABLES.py for table dict() and list[])
-#----Various-----------
-#      weapons_table
-#----Player Classes----
-#      fighter
-#      barbarian
-#----Player Races------
-#      human_race
-#      elf_high
-#      elf_wood
-#      elf_dark
-
+#  Set up overall GUI for game [left panel(Player),middle large panel (grid/board), right panel(Enemy/Enemies)]
 
 
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 #********************************CLASSES********************************
 
 class AbilityStats():
+    """Defines player/creature ability stats, allows for __add__"""
     def __init__(self, common=0, strength=0, dexterity=0, constitution=0, wisdom=0, intelligence=0, charisma=0):
         self.str_stat = common+strength
         self.dex_stat = common+dexterity
@@ -118,6 +83,7 @@ class AbilityStats():
 
 
 class Class():
+    """Allows player to assign class stats (fighter, wizard, etc)"""
     def __init__(self, class_import):
         self.class_name = class_import['Class Name']
         self.class_level = class_import['Class Level']
@@ -131,6 +97,7 @@ class Class():
 
 
 class Player():
+    """Combines all stats to allow creation of Player"""
     def __init__(self, name, race, p_class, stats):
         #Defined by creating the character:
         #example: character = Player('Player Name',race, Class(class_name), stats_total))
@@ -185,11 +152,13 @@ class Player():
 
 #Double Movement on every other diagonal
 def distance_calc_eucl(creature_1, creature_2):
+    """Calculates the distance between two creatures"""
     distance = int(math.sqrt(((creature_1.x-creature_2.x)**2)+(creature_1.y-creature_2.y)**2))
     return distance
 
 #Gives User a List of all Weapons and Attributes
 def weapon_recall():
+    """Provides a breakdown of stored weapons"""
     for x in weapons_table:
         print(x)
         for xx in weapons_table[x]:
@@ -198,6 +167,7 @@ def weapon_recall():
                 print('        ', xxx,':', weapons_table[x][xx][xxx])
 
 def attack_roll(player_or_npc, weapon):
+    """Provides an attack roll, determines if weapon is held"""
     if weapon == player_or_npc.p_class.currently_equipped:
         print('%s attacks with a %s!' % (player_or_npc.name, player_or_npc.p_class.currently_equipped))
         attack_dice = int(random.randrange(1,21))
@@ -207,9 +177,11 @@ def attack_roll(player_or_npc, weapon):
     else: print('You do not have a %s equipped!' % weapon)
 
 def attack_sequence(attacker, defender):
+    """Determine if hit, HP, Player/Creature death, Damage"""
     pass
 
 def test_stats(player_1):
+    """For debugging purposes, tests all stats - not complete yet"""
     print('%s is a %s %s.  He carries a %s that deals %s Damage on a hit.' % (
     player_1.name, player_1.race['Name'], player_1.p_class.class_name,
     player_1.p_class.currently_equipped, player_1.p_class.weapon_damage
