@@ -1,7 +1,8 @@
-import random       #Used in the calculations for dice rolls
-import math         #Used in the calculations for distance
-import re           #Used in the search for dice values (Ex: '1d6' = [1, 6])
-import TABLES       #TABLES.py - stores all character/creature dicts/lists/tables
+import random           #Used in the calculations for dice rolls
+import math             #Used in the calculations for distance
+import re               #Used in the search for dice values (Ex: '1d6' = [1, 6])
+import TABLES           #TABLES.py - stores all character/creature dicts/lists/tables
+from tkinter import *   #Allows for GUI input from the user
 
 
 #THINGS TO DO:
@@ -21,9 +22,57 @@ import TABLES       #TABLES.py - stores all character/creature dicts/lists/table
 #  Set up Turn-Based scenarios between Player and (any/all) enemies currently on the board
 #  Set up overall GUI for game [left panel(Player),middle large panel (grid/board), right panel(Enemy/Enemies)]
 
+#**************************GLOBAL TABLES/DICTS**************************
+#see TABLES.py
+weapons_table = TABLES.weapons_table
 
+#Need to add more attributes such as proficiencies and skills, attacks - import to Class()
+fighter = TABLES.fighter
+barbarian = TABLES.barbarian
+
+#*****Races (see TABLES.py)- will add more options later (proficiencies, bonus skills/abilities)*****
+human_race = TABLES.hr1
+elf_high = TABLES.erh1
+elf_wood = TABLES.erw1
+elf_dark = TABLES.erd1
+
+#*******OTHER********
+character_name = []
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 #********************************CLASSES********************************
+
+class PlayerWindow(Frame):
+    def __init__(self, master):
+        Frame.__init__(self, master)
+        photo = PhotoImage(file='Aki Tohko Token.png')
+        label = Label(master, image=photo)
+        label.pack()
+
+#class EnemyWindow():
+#    pass
+#class GridFrame():
+#    pass
+#class StatusBar():
+#    pass
+#class MenuBar():
+#    pass
+class MainAppFrame(Frame):
+
+
+    def __init__(self, master, *args, **kwargs):
+        Frame.__init__(self, master, *args, **kwargs)
+        menu_frame = Frame(master).pack(side=TOP)
+        player_frame = Frame(master).pack(side=LEFT)
+        status_frame = Frame(master).pack(side=BOTTOM)
+        grid_frame = Frame(master).pack(side=BOTTOM, expand=TRUE)
+
+        button1 = Button(player_frame,text='Show Weapons', command=weapon_recall).pack(side=LEFT)
+        button2 = Button(player_frame,text='Add Name', command=create_character).pack(side=LEFT)
+
+
+
+
+
 
 class AbilityStats():
     """Defines player/creature ability stats, allows for __add__"""
@@ -83,7 +132,7 @@ class AbilityStats():
 
 
 class Class():
-    """Allows player to assign class stats (fighter, wizard, etc)"""
+    """Allow player to assign class stats (fighter, wizard, etc)"""
     def __init__(self, class_import):
         self.class_name = class_import['Class Name']
         self.class_level = class_import['Class Level']
@@ -93,6 +142,10 @@ class Class():
         self.currently_equipped = class_import['Weapon Name']
         self.weapon_damage = class_import['Weapon Damage']
         self.weapon_magic_bonus = class_import['Weapon Magic Bonus']
+
+    def class_ability(self):
+        """Define class-only ability"""
+        pass
 
 
 
@@ -150,15 +203,16 @@ class Player():
 #*************************************************************************
 #********************************FUNCTIONS********************************
 
-#Double Movement on every other diagonal
+
 def distance_calc_eucl(creature_1, creature_2):
-    """Calculates the distance between two creatures"""
+    """Calculates the distance between two creatures.
+    Double Movement on every other diagonal
+    """
     distance = int(math.sqrt(((creature_1.x-creature_2.x)**2)+(creature_1.y-creature_2.y)**2))
     return distance
 
-#Gives User a List of all Weapons and Attributes
 def weapon_recall():
-    """Provides a breakdown of stored weapons"""
+    """Provides a breakdown of stored weapons."""
     for x in weapons_table:
         print(x)
         for xx in weapons_table[x]:
@@ -188,24 +242,22 @@ def test_stats(player_1):
     ))
 
 
+def create_character():  #Testing Button-command function
+    print('Current Names:')
+    for x in character_name: print(x)
+    character_name.append(input('What is the name?: '))
+    print('New Entry Saved!')
+
+
+def create_main_window():
+    root = Tk()
+    root.geometry('480x320')
+    root.title('Test Window 01')
+    p_window = MainAppFrame(root).pack(expand=True)
+    root.mainloop()
+
 #***********************************************************************
-#**************************GLOBAL TABLES/DICTS**************************
-#see TABLES.py
 
-weapons_table = TABLES.weapons_table
-
-#**********Assigning Creature Stats***********
-
-
-#Need to add more attributes such as proficiencies and skills, attacks - import to Class()
-fighter = TABLES.fighter
-barbarian = TABLES.barbarian
-
-#*****Races (see TABLES.py)- will add more options later (proficiencies, bonus skills/abilities)*****
-human_race = TABLES.hr1
-elf_high = TABLES.erh1
-elf_wood = TABLES.erw1
-elf_dark = TABLES.erd1
 
 
 #*******************************************************************************
@@ -214,41 +266,17 @@ elf_dark = TABLES.erd1
 #AblityStats() Testing:
 
 base_stats = AbilityStats(common=10, strength=2, dexterity=1)
-print(base_stats.get_stat('STR'))
-
 start_stats = AbilityStats(common=1)
-print(start_stats.get_stat('STR'))
-
 level4_stats = AbilityStats(dexterity=1, constitution=1)
-print(level4_stats.get_stat('STR'))
-
 level8_stats = AbilityStats(dexterity=2)
-print(level8_stats.get_stat('STR'),'\n')
-
 
 player_stats = base_stats+\
                start_stats+\
                level4_stats+\
                level8_stats
 
-print(player_stats.get_stat('STR'))
-
-
 #---------------------------------
 #Creation of Player testing
-player_1 = Player('Test Guy 1', human_race, Class(fighter), player_stats)
+#player_1 = Player('Test Guy 1', human_race, Class(fighter), player_stats)
 
-print(player_1.p_class.hp_per_level)
-print(player_1.stats.get_stat('STR'))
-print(player_1.stats.get_mod('DEX'))
-player_1.stats.str_stat += 1
-print(player_1.stats.get_stat('STR'))
-print(player_1.race['Vision'])
-print(player_1.race['Size'])
-
-test_stats(player_1)
-
-player_1.name = 'Stoic Heroic'
-
-test_stats(player_1)
-attack_roll(player_1, 'Greatsword')
+create_main_window()
