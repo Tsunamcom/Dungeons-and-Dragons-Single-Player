@@ -37,40 +37,71 @@ elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
 #*******OTHER********
-character_name = []
+selected_race = []
+player_name = []
+player_start_stats = []
+player_race_stats = []
+
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 #********************************CLASSES********************************
 
-class PlayerWindow(Frame):
+class CenterGrid(Frame):
+    """Define Main Gameplay Window"""
     def __init__(self, master):
         Frame.__init__(self, master)
-        photo = PhotoImage(file='Aki Tohko Token.png')
-        label = Label(master, image=photo)
-        label.pack()
+        self.master = master
+        self.gridUI()
 
-#class EnemyWindow():
-#    pass
-#class GridFrame():
-#    pass
-#class StatusBar():
-#    pass
-#class MenuBar():
-#    pass
+    def gridUI(self):
+        pass
+
 class MainAppFrame(Frame):
-
-
-    def __init__(self, master, *args, **kwargs):
-        Frame.__init__(self, master, *args, **kwargs)
-        menu_frame = Frame(master).pack(side=TOP)
-        player_frame = Frame(master).pack(side=LEFT)
-        status_frame = Frame(master).pack(side=BOTTOM)
-        grid_frame = Frame(master).pack(side=BOTTOM, expand=TRUE)
-
-        button1 = Button(player_frame,text='Show Weapons', command=weapon_recall).pack(side=LEFT)
-        button2 = Button(player_frame,text='Add Name', command=create_character).pack(side=LEFT)
+    """Initialize main window"""
+    def __init__(self, master):
+        Frame.__init__(self, master)
+        self.master = master
+        self.mainUI()
 
 
 
+    def mainUI(self):
+        """Main Window Layout"""
+        self.master.title('Fighters(Main)')
+        self.pack(fill=BOTH, expand=1)
+
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure(3, pad=7)
+        self.rowconfigure(3, weight=1)
+        self.rowconfigure(5, pad=7)
+
+        menubar = Menu(self.master)
+        self.master.config(menu=menubar)
+        fileMenu = Menu(menubar)
+        fileMenu.add_command(label='Create Character')  #Need to add def for character create
+        fileMenu.add_command(label='Exit', command=self.exit)
+        menubar.add_cascade(label='File', menu=fileMenu)
+
+        #Buttons on Left
+        showWeap = Button(self, text="Weapons List", command=weapon_recall)\
+            .grid(row=0, column=0)
+        showWeap2 = Button(self, text="Weapons List2", command=weapon_recall)\
+            .grid(row=1, column=0)
+        showWeap3 = Button(self, text="Weapons List3", command=weapon_recall)\
+            .grid(row=2, column=0)
+        blankFrame = Frame(self)\
+            .grid(row=3, column=0, sticky=S)
+
+        #Area in Center
+        area = Frame(self, bg='Grey')
+        area.grid(row=0, column=1, columnspan=2, rowspan=4, padx=5, pady=5, sticky=E+W+S+N)
+
+
+        #Buttons on Right
+        enemy_list_button = Button(self, text="Enemy List")\
+            .grid(row=0, column=3)
+
+    def exit(self):
+        self.quit()
 
 
 
@@ -241,18 +272,15 @@ def test_stats(player_1):
     player_1.p_class.currently_equipped, player_1.p_class.weapon_damage
     ))
 
-
 def create_character():  #Testing Button-command function
     print('Current Names:')
     for x in character_name: print(x)
     character_name.append(input('What is the name?: '))
     print('New Entry Saved!')
 
-
 def create_main_window():
     root = Tk()
-    root.geometry('480x320')
-    root.title('Test Window 01')
+    root.geometry('720x480')
     p_window = MainAppFrame(root).pack(expand=True)
     root.mainloop()
 
