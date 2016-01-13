@@ -45,34 +45,55 @@ player_race_stats = []
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 #********************************CLASSES********************************
 
-class CenterGrid(Frame):
-    """Define Main Gameplay Window"""
+class PlayerFrame(Frame):
+    """Define Player-side Info/Option Window"""
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
         self.gridUI()
 
     def gridUI(self):
-        pass
+        showWeap = Button(self, text="Weapons List", command=weapon_recall)
+        showWeap.grid(row=0, column=0)
+
+        showWeap2 = Button(self, text="Weapons List2", command=weapon_recall)
+        showWeap2.grid(row=1, column=0)
+
+        showWeap3 = Button(self, text="Weapons List3", command=weapon_recall)
+        showWeap3.grid(row=2, column=0)
+
+
+
+class CenterGrid(Frame):
+    """Define Center Play Grid"""
+    def __init__(self, master):
+        Frame.__init__(self, master)
+        self.master = master
+        self.playGrid()
+
+    def playGrid(self):  #NOT WORKING YET
+        """Area in Center"""
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure(3, pad=7)
+        self.rowconfigure(3, weight=1)
+        self.rowconfigure(5, pad=7)
+
+        area = Frame(self, bg='Grey')
+        area.grid(row=0, column=0, columnspan=2, rowspan=4, padx=5, pady=5, sticky=E+W+S+N)
+
 
 class MainAppFrame(Frame):
     """Initialize main window"""
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
+        self.player_frame = PlayerFrame(master)
+        self.center_grid = CenterGrid(master)
         self.mainUI()
-
-
 
     def mainUI(self):
         """Main Window Layout"""
         self.master.title('Fighters(Main)')
-        self.pack(fill=BOTH, expand=1)
-
-        self.columnconfigure(1, weight=1)
-        self.columnconfigure(3, pad=7)
-        self.rowconfigure(3, weight=1)
-        self.rowconfigure(5, pad=7)
 
         menubar = Menu(self.master)
         self.master.config(menu=menubar)
@@ -81,24 +102,12 @@ class MainAppFrame(Frame):
         fileMenu.add_command(label='Exit', command=self.exit)
         menubar.add_cascade(label='File', menu=fileMenu)
 
-        #Buttons on Left
-        showWeap = Button(self, text="Weapons List", command=weapon_recall)\
-            .grid(row=0, column=0)
-        showWeap2 = Button(self, text="Weapons List2", command=weapon_recall)\
-            .grid(row=1, column=0)
-        showWeap3 = Button(self, text="Weapons List3", command=weapon_recall)\
-            .grid(row=2, column=0)
-        blankFrame = Frame(self)\
-            .grid(row=3, column=0, sticky=S)
+        self.player_frame.pack(side=LEFT,fill=Y, expand=False)
+        self.center_grid.pack(side=LEFT,fill=BOTH,expand=True)
 
-        #Area in Center
-        area = Frame(self, bg='Grey')
-        area.grid(row=0, column=1, columnspan=2, rowspan=4, padx=5, pady=5, sticky=E+W+S+N)
-
-
-        #Buttons on Right
-        enemy_list_button = Button(self, text="Enemy List")\
-            .grid(row=0, column=3)
+        #Buttons on Right - will make class later for this
+        enemy_list_button = Button(self, text="Enemy List")
+        enemy_list_button.pack(side=TOP, expand=False, padx=5)
 
     def exit(self):
         self.quit()
