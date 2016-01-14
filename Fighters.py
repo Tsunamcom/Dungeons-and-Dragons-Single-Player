@@ -3,7 +3,7 @@ import math             #Used in the calculations for distance
 import re               #Used in the search for dice values (Ex: '1d6' = [1, 6])
 import TABLES           #TABLES.py - stores all character/creature dicts/lists/tables
 from tkinter import *   #Allows for GUI input from the user
-
+from PIL import Image, ImageTk
 
 #THINGS TO DO:
 #   --PLAYER--
@@ -37,8 +37,9 @@ elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
 #*******OTHER********
-selected_race = []
-player_name = []
+selected_race = human_race
+selected_class = fighter
+player_name = {'Name': 'Player 1'}
 player_start_stats = []
 player_race_stats = []
 
@@ -50,17 +51,38 @@ class PlayerFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
-        self.gridUI()
+        token_name = 'Aki Tohko Token.png'  #Replace with Player Defined Token in future updates
+        self.token(token_name)
+        self.p_buttons()
 
-    def gridUI(self):
+
+    def token(self, token_name):
+        """Player Token Image"""
+        player_img = Image.open(token_name)
+        resized_p_img = player_img.resize((75,75), Image.ANTIALIAS)
+        p_token = ImageTk.PhotoImage(resized_p_img)
+        img_label = Label(self, image=p_token)
+        img_label.image = p_token
+        img_label.grid(row=0)
+
+    def p_buttons(self):
+        """Show everything on the left side of the screen - Player Menu"""
+        showStats = Label(self, text=('Player Name: %s \n'
+                                      'Player Race: %s \n'
+                                      'Player Class: %s' % 
+                                      (player_name['Name'], selected_race['Name'], selected_class['Class Name'])))
+        showStats.grid(row=1)
+
         showWeap = Button(self, text="Weapons List", command=weapon_recall)
-        showWeap.grid(row=0, column=0)
+        showWeap.grid(row=2)
 
         showWeap2 = Button(self, text="Weapons List2", command=weapon_recall)
-        showWeap2.grid(row=1, column=0)
+        showWeap2.grid(row=3)
 
         showWeap3 = Button(self, text="Weapons List3", command=weapon_recall)
-        showWeap3.grid(row=2, column=0)
+        showWeap3.grid(row=4)
+
+
 
 
 
@@ -82,6 +104,18 @@ class CenterGrid(Frame):
         area.grid(row=0, column=0, columnspan=2, rowspan=4, padx=5, pady=5, sticky=E+W+S+N)
 
 
+
+class EnemyFrame(Frame):
+    def __init__(self, master):
+        Frame.__init__(self, master)
+        self.master = master
+        self.show_enemies()
+
+    def show_enemies(self):
+        enemy_list_button = Button(self, text="Enemy List")
+        enemy_list_button.grid()
+
+
 class MainAppFrame(Frame):
     """Initialize main window"""
     def __init__(self, master):
@@ -89,6 +123,7 @@ class MainAppFrame(Frame):
         self.master = master
         self.player_frame = PlayerFrame(master)
         self.center_grid = CenterGrid(master)
+        self.enemy_frame = EnemyFrame(master)
         self.mainUI()
 
     def mainUI(self):
@@ -104,10 +139,9 @@ class MainAppFrame(Frame):
 
         self.player_frame.pack(side=LEFT,fill=Y, expand=False)
         self.center_grid.pack(side=LEFT,fill=BOTH,expand=True)
-
+        self.enemy_frame.pack(side=LEFT,fill=Y, expand=False)
         #Buttons on Right - will make class later for this
-        enemy_list_button = Button(self, text="Enemy List")
-        enemy_list_button.pack(side=TOP, expand=False, padx=5)
+
 
     def exit(self):
         self.quit()
@@ -240,8 +274,8 @@ class Player():
             print('You can not move there!')
 
 
-#*************************************************************************
 #********************************FUNCTIONS********************************
+#*************************************************************************
 
 
 def distance_calc_eucl(creature_1, creature_2):
