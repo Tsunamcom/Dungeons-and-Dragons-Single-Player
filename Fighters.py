@@ -37,8 +37,8 @@ elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
 #*******OTHER********
-selected_race = human_race
-selected_class = fighter
+selected_race = human_race  #Placeholder
+selected_class = fighter    #Placeholder
 player_name = {'Name': 'Player 1'}
 player_start_stats = []
 player_race_stats = []
@@ -51,15 +51,16 @@ class PlayerFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
-        token_name = 'Aki Tohko Token.png'  #Replace with Player Defined Token in future updates
-        self.token(token_name)
+        self.token_size = 75
+        token_name = 'Player.png'  #Replace with Player Defined Token in future updates
+        self.token(token_name, self.token_size)
         self.p_buttons()
 
 
-    def token(self, token_name):
+    def token(self, token_name, token_size):
         """Player Token Image"""
         player_img = Image.open(token_name)
-        resized_p_img = player_img.resize((75,75), Image.ANTIALIAS)
+        resized_p_img = player_img.resize((self.token_size,self.token_size), Image.ANTIALIAS)
         p_token = ImageTk.PhotoImage(resized_p_img)
         img_label = Label(self, image=p_token)
         img_label.image = p_token
@@ -67,22 +68,15 @@ class PlayerFrame(Frame):
 
     def p_buttons(self):
         """Show everything on the left side of the screen - Player Menu"""
-        showStats = Label(self, text=('Player Name: %s \n'
+        showStats = Label(self, pady = 5, text=('Player Name: %s \n'
                                       'Player Race: %s \n'
-                                      'Player Class: %s' % 
+                                      'Player Class: %s \n'
+                                      'Player Color = BLUE' %
                                       (player_name['Name'], selected_race['Name'], selected_class['Class Name'])))
         showStats.grid(row=1)
 
         showWeap = Button(self, text="Weapons List", command=weapon_recall)
         showWeap.grid(row=2)
-
-        showWeap2 = Button(self, text="Weapons List2", command=weapon_recall)
-        showWeap2.grid(row=3)
-
-        showWeap3 = Button(self, text="Weapons List3", command=weapon_recall)
-        showWeap3.grid(row=4)
-
-
 
 
 
@@ -91,17 +85,81 @@ class CenterGrid(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
+        map_name = 'Map001.jpg'     #Replace with Player Defined Map in future updates
+        self.grid_size = 20
+        self.player_x = self.grid_size
+        self.player_y = self.grid_size
+        self.player_coords = (1,1)  #WRONG - CHANGE THIS TO CALCULATED COORDINATES - CHANGE ALL RELATED CODE
+        self.player_position = [self.player_y, self.player_x, self.player_y+self.grid_size, self.player_x+self.grid_size]
         self.playGrid()
 
-    def playGrid(self):  #NOT WORKING YET
+
+
+
+    def playGrid(self):
         """Area in Center"""
         self.columnconfigure(1, weight=1)
         self.columnconfigure(3, pad=7)
         self.rowconfigure(3, weight=1)
         self.rowconfigure(5, pad=7)
 
-        area = Frame(self, bg='Grey')
-        area.grid(row=0, column=0, columnspan=2, rowspan=4, padx=5, pady=5, sticky=E+W+S+N)
+        play_area = Canvas(self, bg='Grey')
+        play_area.grid(row=0, column=0, columnspan=2, rowspan=4, padx=5, pady=5, sticky=E+W+S+N)
+
+        #Grid Size Adjust
+        grid_smaller = Button(self, text="Grid-", command=self.update_grid_size_down)
+        grid_smaller.grid(row=4)
+        grid_bigger = Button(self, text="Grid+", command=self.update_grid_size_up)
+        grid_bigger.grid(row=5, column=0)
+
+        p_down = Button(self, text="Down", command=self.move_down)
+        p_down.grid(row=5, column=1)
+        p_right = Button(self, text="Right", command=self.move_right)
+        p_right.grid(row=5, column=2)
+
+        #Create Grid
+        pos_x = self.player_position[1]-self.grid_size
+        pos_y = self.player_position[0]-self.grid_size
+
+        #Placeholder for Player
+        print(self.player_position)
+        player_position = play_area.create_rectangle(pos_x, pos_y, self.grid_size+pos_x, self.grid_size+pos_y, fill="blue")
+
+#      BROKEN - NEED TO FIGURE OUT HOW TO SHOW PLAYER TOKEN INSTEAD OF RECTANGLE
+#        player_img = Image.open('Player.png')
+#        resized_p_img = player_img.resize((self.grid_size,self.grid_size), Image.ANTIALIAS)
+#        p_token = ImageTk.PhotoImage(resized_p_img)
+#        player_token = Canvas(self, bg='Red')
+#        player_token.place(height=20, width=20)
+#        player_token.create_image(0, 0, image=p_token, anchor=NW)
+
+        for i in range(200):
+            play_area.create_line(self.grid_size * i, 0, self.grid_size * i, 1600)
+            play_area.create_line(0, self.grid_size * i, 1600, self.grid_size * i)
+
+    def move_down(self):
+        self.player_position[0] += self.grid_size
+        self.player_position[2] += self.grid_size
+        player_coords = (int(self.player_position[0]/self.grid_size), int(self.player_position[1]/self.grid_size))
+        print(player_coords)
+        self.playGrid()
+
+    def move_right(self):
+        self.player_position[1] += self.grid_size
+        self.player_position[3] += self.grid_size
+        player_coords=(int(self.player_position[0]/self.grid_size),int(self.player_position[1]/self.grid_size))
+        print(player_coords)
+        self.playGrid()
+
+
+    def update_grid_size_up(self):
+        self.grid_size += 5
+        self.playGrid()
+    def update_grid_size_down(self):
+        self.grid_size -= 5
+        self.playGrid()
+
+
 
 
 
@@ -114,6 +172,10 @@ class EnemyFrame(Frame):
     def show_enemies(self):
         enemy_list_button = Button(self, text="Enemy List")
         enemy_list_button.grid()
+
+        label_0 = Label(self, text='This is where the \n enemies will go!')
+        label_0.grid()
+
 
 
 class MainAppFrame(Frame):
@@ -323,7 +385,7 @@ def create_character():  #Testing Button-command function
 
 def create_main_window():
     root = Tk()
-    root.geometry('720x480')
+    root.geometry('800x480')
     p_window = MainAppFrame(root).pack(expand=True)
     root.mainloop()
 
