@@ -1,12 +1,13 @@
-import random           #Used in the calculations for dice rolls
-import math             #Used in the calculations for distance
-import re               #Used in the search for dice values (Ex: '1d6' = [1, 6])
-import TABLES           #TABLES.py - stores all character/creature dicts/lists/tables
-from tkinter import *   #Allows for GUI input from the user
+import random           # Used in the calculations for dice rolls
+import math             # Used in the calculations for distance
+import re               # Used in the search for dice values (Ex: '1d6' = [1, 6])
+import TABLES           # TABLES.py - stores all character/creature dicts/lists/tables
+from tkinter import *   # Allows for GUI input from the user
 from PIL import Image, ImageTk
 
 
-#THINGS TO DO:
+# TESTING PYCHARM GIT UPDATE
+# THINGS TO DO:
 #   --PLAYER--
 #  Build GUI Interface for Player stats, race, and class selection and storage [start with input('')]
 #  Expand race and class stats in TABLES
@@ -23,11 +24,11 @@ from PIL import Image, ImageTk
 #  Set up Turn-Based scenarios between Player and (any/all) enemies currently on the board
 #  Set up overall GUI for game [left panel(Player),middle large panel (grid/board), right panel(Enemy/Enemies)]
 
-#**************************GLOBAL TABLES/DICTS**************************
-#see TABLES.py
+# **************************GLOBAL TABLES/DICTS**************************
+# see TABLES.py
 weapons_table = TABLES.weapons_table
 
-#Need to add more attributes such as proficiencies and skills, attacks - import to Class()
+# Need to add more attributes such as proficiencies and skills, attacks - import to Class()
 fighter = TABLES.fighter
 barbarian = TABLES.barbarian
 
@@ -194,8 +195,6 @@ class ControlFrame(Frame):
     def update_play_grid(self):
         self.center_grid.playGrid()
 
-    def get_coords(self):
-        pass
 
     def move_down(self):
         self.center_grid.player_position[0] += self.center_grid.grid_size
@@ -236,7 +235,6 @@ class MainAppFrame(Frame):
         self.player_frame.pack(side=LEFT,fill=Y, expand=False)
         self.center_grid.pack(side=LEFT,fill=BOTH,expand=True)
         self.enemy_frame.pack(side=LEFT,fill=Y, expand=False)
-        #Buttons on Right - will make class later for this
 
 
     def exit(self):
@@ -348,26 +346,6 @@ class Player():
     def get_loc(self):
         location = (self.x,self.y)
         return location
-
-    #Player Movement Controls (Player will be moved by Buttons)
-    def move_up(self):
-        print(self.name, 'attempts to move up.')
-        self.y += 1
-    def move_down(self):
-        print(self.name, 'attempts to move down.')
-        self.y -= 1
-        if self.y < 0:
-            self.y = 0
-            print('You can not move there!')
-    def move_right(self):
-        print(self.name, 'attempts to move right.')
-        self.x += 1
-    def move_left(self):
-        print(self.name, 'attempts to move left.')
-        self.x -= 1
-        if self.x < 0:
-            self.x = 0
-            print('You can not move there!')
 
 
 #********************************FUNCTIONS********************************
