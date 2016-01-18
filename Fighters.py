@@ -46,6 +46,9 @@ player_race_stats = []
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 #********************************CLASSES********************************
 
+
+
+
 class PlayerFrame(Frame):
     """Define Player-side Info/Option Window"""
     def __init__(self, master):
@@ -89,10 +92,8 @@ class CenterGrid(Frame):
         self.grid_size = 20
         self.player_x = self.grid_size
         self.player_y = self.grid_size
-        self.player_coords = (1,1)  #WRONG - CHANGE THIS TO CALCULATED COORDINATES - CHANGE ALL RELATED CODE
         self.player_position = [self.player_y, self.player_x, self.player_y+self.grid_size, self.player_x+self.grid_size]
         self.playGrid()
-
 
 
 
@@ -114,16 +115,19 @@ class CenterGrid(Frame):
 
         p_down = Button(self, text="Down", command=self.move_down)
         p_down.grid(row=5, column=1)
-        p_right = Button(self, text="Right", command=self.move_right)
-        p_right.grid(row=5, column=2)
+        #p_right = Button(self, text="Right", command=self.move_right)
+        #p_right.grid(row=5, column=2)
 
-        #Create Grid
-        pos_x = self.player_position[1]-self.grid_size
-        pos_y = self.player_position[0]-self.grid_size
+
+        #Figure out what's going on w/ the resize offset
+        pos_x = self.player_position[1]
+        pos_y = self.player_position[0]
+        pos_x_end = self.player_position[1]-self.grid_size
+        pos_y_end = self.player_position[0]-self.grid_size
 
         #Placeholder for Player
         print(self.player_position)
-        player_position = play_area.create_rectangle(pos_x, pos_y, self.grid_size+pos_x, self.grid_size+pos_y, fill="blue")
+        player_position = play_area.create_rectangle(pos_x, pos_y, pos_x_end, pos_y_end, fill="blue")
 
 #      BROKEN - NEED TO FIGURE OUT HOW TO SHOW PLAYER TOKEN INSTEAD OF RECTANGLE
 #        player_img = Image.open('Player.png')
@@ -133,6 +137,7 @@ class CenterGrid(Frame):
 #        player_token.place(height=20, width=20)
 #        player_token.create_image(0, 0, image=p_token, anchor=NW)
 
+        #Create Grid
         for i in range(200):
             play_area.create_line(self.grid_size * i, 0, self.grid_size * i, 1600)
             play_area.create_line(0, self.grid_size * i, 1600, self.grid_size * i)
@@ -153,7 +158,7 @@ class CenterGrid(Frame):
 
 
     def update_grid_size_up(self):
-        self.grid_size += 5
+        self.grid_size += 5  #Needs x, y offset based on location (grid_size x player location) ?
         self.playGrid()
     def update_grid_size_down(self):
         self.grid_size -= 5
@@ -176,6 +181,32 @@ class EnemyFrame(Frame):
         label_0 = Label(self, text='This is where the \n enemies will go!')
         label_0.grid()
 
+class ControlFrame(Frame):
+    def __init__(self, master):
+        Frame.__init__(self, master)
+        self.center_grid = CenterGrid(master)
+        self.master = master
+        self.player_coords = [0, 0]
+        showWeap = Button(self, text="Move Down", command=self.move_down)
+        showWeap.grid(row=0)
+
+    def update_play_grid(self):
+        self.center_grid.playGrid()
+
+    def get_coords(self):
+        pass
+
+    def move_down(self):
+        self.center_grid.player_position[0] += self.center_grid.grid_size
+        self.center_grid.player_position[2] += self.center_grid.grid_size
+        self.player_coords = (int(self.center_grid.player_position[0]/self.center_grid.grid_size),
+                              int(self.center_grid.player_position[1]/self.center_grid.grid_size))
+        print(self.player_coords)
+        self.update_play_grid()
+
+
+
+
 
 
 class MainAppFrame(Frame):
@@ -186,6 +217,7 @@ class MainAppFrame(Frame):
         self.player_frame = PlayerFrame(master)
         self.center_grid = CenterGrid(master)
         self.enemy_frame = EnemyFrame(master)
+        self.control_frame = ControlFrame(master)
         self.mainUI()
 
     def mainUI(self):
@@ -199,6 +231,7 @@ class MainAppFrame(Frame):
         fileMenu.add_command(label='Exit', command=self.exit)
         menubar.add_cascade(label='File', menu=fileMenu)
 
+        self.control_frame.pack(side=BOTTOM, fill=X, expand=False)
         self.player_frame.pack(side=LEFT,fill=Y, expand=False)
         self.center_grid.pack(side=LEFT,fill=BOTH,expand=True)
         self.enemy_frame.pack(side=LEFT,fill=Y, expand=False)
