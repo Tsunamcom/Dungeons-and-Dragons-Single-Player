@@ -5,7 +5,7 @@ import TABLES           #TABLES.py - stores all character/creature dicts/lists/t
 from tkinter import *   #Allows for GUI input from the user
 from PIL import Image, ImageTk
 
-#TESTING UPLOADED CHANGES v.01
+
 #THINGS TO DO:
 #   --PLAYER--
 #  Build GUI Interface for Player stats, race, and class selection and storage [start with input('')]
