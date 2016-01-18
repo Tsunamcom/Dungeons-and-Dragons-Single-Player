@@ -6,7 +6,6 @@ from tkinter import *   # Allows for GUI input from the user
 from PIL import Image, ImageTk
 
 
-# TESTING PYCHARM GIT UPDATE
 # THINGS TO DO:
 #   --PLAYER--
 #  Build GUI Interface for Player stats, race, and class selection and storage [start with input('')]
@@ -32,21 +31,21 @@ weapons_table = TABLES.weapons_table
 fighter = TABLES.fighter
 barbarian = TABLES.barbarian
 
-#*****Races (see TABLES.py)- will add more options later (proficiencies, bonus skills/abilities)*****
+# *****Races (see TABLES.py)- will add more options later (proficiencies, bonus skills/abilities)*****
 human_race = TABLES.hr1
 elf_high = TABLES.erh1
 elf_wood = TABLES.erw1
 elf_dark = TABLES.erd1
 
-#*******OTHER********
-selected_race = human_race  #Placeholder
-selected_class = fighter    #Placeholder
+# *******OTHER********
+selected_race = human_race  # Placeholder
+selected_class = fighter    # Placeholder
 player_name = {'Name': 'Player 1'}
 player_start_stats = []
 player_race_stats = []
 
-#*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-#********************************CLASSES********************************
+# *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+# ********************************CLASSES********************************
 
 
 
@@ -90,7 +89,7 @@ class CenterGrid(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
-        map_name = 'Map001.jpg'     #Replace with Player Defined Map in future updates
+        map_name = 'Map001.jpg'     # Replace with Player Defined Map in future updates
         self.grid_size = 20
         self.player_x = self.grid_size
         self.player_y = self.grid_size
@@ -109,7 +108,7 @@ class CenterGrid(Frame):
         play_area = Canvas(self, bg='Grey')
         play_area.grid(row=0, column=0, columnspan=2, rowspan=4, padx=5, pady=5, sticky=E+W+S+N)
 
-        #Grid Size Adjust
+        # Grid Size Adjust
         grid_smaller = Button(self, text="Grid-", command=self.update_grid_size_down)
         grid_smaller.grid(row=4)
         grid_bigger = Button(self, text="Grid+", command=self.update_grid_size_up)
@@ -117,17 +116,17 @@ class CenterGrid(Frame):
 
         p_down = Button(self, text="Down", command=self.move_down)
         p_down.grid(row=5, column=1)
-        #p_right = Button(self, text="Right", command=self.move_right)
-        #p_right.grid(row=5, column=2)
+        # p_right = Button(self, text="Right", command=self.move_right)
+        # p_right.grid(row=5, column=2)
 
 
-        #Figure out what's going on w/ the resize offset
+        # Figure out what's going on w/ the resize offset
         pos_x = self.player_position[1]
         pos_y = self.player_position[0]
         pos_x_end = self.player_position[1]-self.grid_size
         pos_y_end = self.player_position[0]-self.grid_size
 
-        #Placeholder for Player
+        # Placeholder for Player
         print(self.player_position)
         player_position = play_area.create_rectangle(pos_x, pos_y, pos_x_end, pos_y_end, fill="blue")
 
@@ -139,7 +138,7 @@ class CenterGrid(Frame):
 #        player_token.place(height=20, width=20)
 #        player_token.create_image(0, 0, image=p_token, anchor=NW)
 
-        #Create Grid
+        # Create Grid
         for i in range(200):
             play_area.create_line(self.grid_size * i, 0, self.grid_size * i, 1600)
             play_area.create_line(0, self.grid_size * i, 1600, self.grid_size * i)
@@ -160,7 +159,7 @@ class CenterGrid(Frame):
 
 
     def update_grid_size_up(self):
-        self.grid_size += 5  #Needs x, y offset based on location (grid_size x player location) ?
+        self.grid_size += 5  # Needs x, y offset based on location (grid_size x player location) ?
         self.playGrid()
     def update_grid_size_down(self):
         self.grid_size -= 5
@@ -320,18 +319,18 @@ class Class():
 class Player():
     """Combines all stats to allow creation of Player"""
     def __init__(self, name, race, p_class, stats):
-        #Defined by creating the character:
-        #example: character = Player('Player Name',race, Class(class_name), stats_total))
+        # Defined by creating the character:
+        # example: character = Player('Player Name',race, Class(class_name), stats_total))
         self.name = name
         self.race = race
         self.p_class = p_class
         self.stats = stats
 
-        #Defined by Class Starting HP and HP per Level gains
+        # Defined by Class Starting HP and HP per Level gains
         self.start_hp = p_class.start_hp
         self.hp_per_level = p_class.hp_per_level
 
-        #For all starting Players no matter what race/class
+        # For all starting Players no matter what race/class
         self.level = 1                 #Will increase with XP gained if Player
         self.x = 0                     #Can be modified by Player Controls
         self.y = 0
@@ -401,14 +400,14 @@ def create_main_window():
     p_window = MainAppFrame(root).pack(expand=True)
     root.mainloop()
 
-#***********************************************************************
+# ***********************************************************************
 
 
 
-#*******************************************************************************
-#***********************************TESTING*************************************
+# *******************************************************************************
+# ***********************************TESTING*************************************
 
-#AblityStats() Testing:
+# AblityStats() Testing:
 
 base_stats = AbilityStats(common=10, strength=2, dexterity=1)
 start_stats = AbilityStats(common=1)
@@ -420,8 +419,8 @@ player_stats = base_stats+\
                level4_stats+\
                level8_stats
 
-#---------------------------------
-#Creation of Player testing
-#player_1 = Player('Test Guy 1', human_race, Class(fighter), player_stats)
+# ---------------------------------
+# Creation of Player testing
+# player_1 = Player('Test Guy 1', human_race, Class(fighter), player_stats)
 
 create_main_window()
