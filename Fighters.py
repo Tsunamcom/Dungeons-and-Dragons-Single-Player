@@ -71,7 +71,9 @@ class CenterGrid(Frame):
         self.grid_size = 20
         self.player_x = self.grid_size
         self.player_y = self.grid_size
-        self.player_position = [self.player_y, self.player_x, self.player_y+self.grid_size, self.player_x+self.grid_size]
+        self.player_position = [self.player_y, self.player_x,
+                                self.player_y+self.grid_size, self.player_x+self.grid_size
+                                ]
         self.playGrid()
 
     def playGrid(self):
@@ -338,7 +340,8 @@ def attack_roll(player_or_npc, weapon):
         attack = attack_dice+player_or_npc.stats.get_mod('STR')
         print('Attack:  %s + %s = [%s vs. AC]' % (attack_dice, player_or_npc.stats.get_mod('STR'), attack))
         return attack
-    else: print('You do not have a %s equipped!' % weapon)
+    else:
+        print('You do not have a %s equipped!' % weapon)
 
 
 def attack_sequence(attacker, defender):
