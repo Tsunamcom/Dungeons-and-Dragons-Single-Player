@@ -64,22 +64,38 @@ class PlayerFrame(Frame):
 
 class CenterGrid(Frame):
     """Define Center Play Grid"""
+    player_position = [0, 0]
+
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
         self.grid_size = 20
-        self.player_position = [0, 0]
         self.play_grid()
 
     def play_grid(self):
         """Area in Center"""
+        print('You drew the PlayGrid')
         self.columnconfigure(1, weight=1)
         self.columnconfigure(3, pad=7)
         self.rowconfigure(3, weight=1)
         self.rowconfigure(5, pad=7)
 
+        # Create the primary map holder
         play_area = Canvas(self, bg='Grey')
         play_area.grid(row=0, column=0, columnspan=2, rowspan=4, padx=5, pady=5, sticky=E+W+S+N)
+
+        # Create Grid Lines asd on the size of the grid
+        for i in range(200):
+            play_area.create_line(self.grid_size * i, 0, self.grid_size * i, 1600)
+            play_area.create_line(0, self.grid_size * i, 1600, self.grid_size * i)
+
+        # Draw the player square (Blue)
+        play_area.create_rectangle(self.player_position[0]*self.grid_size,
+                                   self.player_position[1]*self.grid_size,
+                                   self.player_position[0]*self.grid_size+self.grid_size,
+                                   self.player_position[1]*self.grid_size+self.grid_size,
+                                   fill="blue")
+        print(self.player_position, '\n')
 
         # Grid Size Adjust
         grid_smaller = Button(self, text="Grid-", command=self.update_grid_size_down)
@@ -90,21 +106,9 @@ class CenterGrid(Frame):
         p_down = Button(self, text="Down", command=self.move_down)
         p_down.grid(row=5, column=1)
 
-        # Placeholder for Player
-        print(self.player_position)
-        play_area.create_rectangle(self.player_position[0]*self.grid_size,
-                                   self.player_position[1]*self.grid_size,
-                                   self.player_position[0]*self.grid_size+self.grid_size,
-                                   self.player_position[1]*self.grid_size+self.grid_size,
-                                   fill="blue")
-
-        # Create Grid
-        for i in range(200):
-            play_area.create_line(self.grid_size * i, 0, self.grid_size * i, 1600)
-            play_area.create_line(0, self.grid_size * i, 1600, self.grid_size * i)
-
     def move_down(self):
         self.player_position[1] += 1
+        print('You changed the Position')  # Debug Purposes
         self.play_grid()
 
     def update_grid_size_up(self):
@@ -133,7 +137,7 @@ class EnemyFrame(Frame):
 class ControlFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.center_grid = CenterGrid(master)
+        self.center_grid = CenterGrid(self)
         self.master = master
 
         show_weapon = Button(self, text="Move Down", command=self.move_down)
