@@ -58,8 +58,8 @@ class PlayerFrame(Frame):
 
         showStats.grid(row=1)
 
-        showWeap = Button(self, text="Weapons List", command=weapon_recall)
-        showWeap.grid(row=2)
+        show_weapon = Button(self, text="Weapons List", command=weapon_recall)
+        show_weapon.grid(row=2)
 
 
 class CenterGrid(Frame):
@@ -67,16 +67,11 @@ class CenterGrid(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
-        map_name = 'Map001.jpg'     # Replace with Player Defined Map in future updates
         self.grid_size = 20
-        self.player_x = self.grid_size
-        self.player_y = self.grid_size
-        self.player_position = [self.player_y, self.player_x,
-                                self.player_y+self.grid_size, self.player_x+self.grid_size
-                                ]
-        self.playGrid()
+        self.player_position = [0, 0]
+        self.play_grid()
 
-    def playGrid(self):
+    def play_grid(self):
         """Area in Center"""
         self.columnconfigure(1, weight=1)
         self.columnconfigure(3, pad=7)
@@ -94,26 +89,14 @@ class CenterGrid(Frame):
 
         p_down = Button(self, text="Down", command=self.move_down)
         p_down.grid(row=5, column=1)
-        # p_right = Button(self, text="Right", command=self.move_right)
-        # p_right.grid(row=5, column=2)
-
-        # Figure out what's going on w/ the resize offset
-        pos_x = self.player_position[1]
-        pos_y = self.player_position[0]
-        pos_x_end = self.player_position[1]-self.grid_size
-        pos_y_end = self.player_position[0]-self.grid_size
 
         # Placeholder for Player
         print(self.player_position)
-        player_position = play_area.create_rectangle(pos_x, pos_y, pos_x_end, pos_y_end, fill="blue")
-
-#      BROKEN - NEED TO FIGURE OUT HOW TO SHOW PLAYER TOKEN INSTEAD OF RECTANGLE
-#        player_img = Image.open('Player.png')
-#        resized_p_img = player_img.resize((self.grid_size,self.grid_size), Image.ANTIALIAS)
-#        p_token = ImageTk.PhotoImage(resized_p_img)
-#        player_token = Canvas(self, bg='Red')
-#        player_token.place(height=20, width=20)
-#        player_token.create_image(0, 0, image=p_token, anchor=NW)
+        play_area.create_rectangle(self.player_position[0]*self.grid_size,
+                                   self.player_position[1]*self.grid_size,
+                                   self.player_position[0]*self.grid_size+self.grid_size,
+                                   self.player_position[1]*self.grid_size+self.grid_size,
+                                   fill="blue")
 
         # Create Grid
         for i in range(200):
@@ -121,26 +104,16 @@ class CenterGrid(Frame):
             play_area.create_line(0, self.grid_size * i, 1600, self.grid_size * i)
 
     def move_down(self):
-        self.player_position[0] += self.grid_size
-        self.player_position[2] += self.grid_size
-        player_coords = (int(self.player_position[0]/self.grid_size), int(self.player_position[1]/self.grid_size))
-        print(player_coords)
-        self.playGrid()
-
-    def move_right(self):
-        self.player_position[1] += self.grid_size
-        self.player_position[3] += self.grid_size
-        player_coords = (int(self.player_position[0]/self.grid_size),int(self.player_position[1]/self.grid_size))
-        print(player_coords)
-        self.playGrid()
+        self.player_position[1] += 1
+        self.play_grid()
 
     def update_grid_size_up(self):
         self.grid_size += 5  # Needs x, y offset based on location (grid_size x player location) ?
-        self.playGrid()
+        self.play_grid()
 
     def update_grid_size_down(self):
         self.grid_size -= 5
-        self.playGrid()
+        self.play_grid()
 
 
 class EnemyFrame(Frame):
@@ -162,20 +135,12 @@ class ControlFrame(Frame):
         Frame.__init__(self, master)
         self.center_grid = CenterGrid(master)
         self.master = master
-        self.player_coords = [0, 0]
-        showWeap = Button(self, text="Move Down", command=self.move_down)
-        showWeap.grid(row=0)
 
-    def update_play_grid(self):
-        self.center_grid.playGrid()
+        show_weapon = Button(self, text="Move Down", command=self.move_down)
+        show_weapon.grid(row=0)
 
     def move_down(self):
-        self.center_grid.player_position[0] += self.center_grid.grid_size
-        self.center_grid.player_position[2] += self.center_grid.grid_size
-        self.player_coords = (int(self.center_grid.player_position[0]/self.center_grid.grid_size),
-                              int(self.center_grid.player_position[1]/self.center_grid.grid_size))
-        print(self.player_coords)
-        self.update_play_grid()
+        self.center_grid.move_down()
 
 
 class MainAppFrame(Frame):
@@ -209,7 +174,7 @@ class MainAppFrame(Frame):
         self.quit()
 
 
-class AbilityStats():
+class AbilityStats:
     """Defines player/creature ability stats, allows for __add__"""
     def __init__(self, common=0, strength=0, dexterity=0, constitution=0, wisdom=0, intelligence=0, charisma=0):
         self.str_stat = common+strength
@@ -344,11 +309,6 @@ def attack_roll(player_or_npc, weapon):
         print('You do not have a %s equipped!' % weapon)
 
 
-def attack_sequence(attacker, defender):
-    """Determine if hit, HP, Player/Creature death, Damage"""
-    pass
-
-
 def test_stats(player_1):
     """For debugging purposes, tests all stats - not complete yet"""
     print('%s is a %s %s.  He carries a %s that deals %s Damage on a hit.' % (
@@ -408,5 +368,4 @@ player_stats = base_stats +\
 
 
 if __name__ == '__main__':
-    """Primary Boilerplate"""
     create_main_window()
