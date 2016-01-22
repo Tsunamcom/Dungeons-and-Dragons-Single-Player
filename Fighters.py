@@ -66,7 +66,7 @@ class CenterGrid(Frame):
     """Define Center Play Grid"""
     player_position = [0, 0]
 
-    def __init__(self, master):
+    def __init__(self, master, *args):
         Frame.__init__(self, master)
         self.master = master
         self.grid_size = 20
@@ -135,17 +135,16 @@ class EnemyFrame(Frame):
 
 
 class ControlFrame(Frame):
-    def __init__(self, master):
+    def __init__(self, master, center_grid):
         Frame.__init__(self, master)
-        self.center_grid = CenterGrid(self)
         self.master = master
+        self.center_grid = center_grid
 
         show_weapon = Button(self, text="Move Down", command=self.move_down)
         show_weapon.grid(row=0)
 
     def move_down(self):
         self.center_grid.move_down()
-
 
 class MainAppFrame(Frame):
     """Initialize main window"""
@@ -155,7 +154,7 @@ class MainAppFrame(Frame):
         self.player_frame = PlayerFrame(master)
         self.center_grid = CenterGrid(master)
         self.enemy_frame = EnemyFrame(master)
-        self.control_frame = ControlFrame(master)
+        self.control_frame = ControlFrame(master, self.center_grid)
         self.mainUI()
 
     def mainUI(self):
