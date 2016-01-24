@@ -101,18 +101,30 @@ class CenterGrid(Frame):
         grid_smaller = Button(self, text="Grid-", command=self.update_grid_size_down)
         grid_smaller.grid(row=4)
         grid_bigger = Button(self, text="Grid+", command=self.update_grid_size_up)
-        grid_bigger.grid(row=5, column=0)
-
-        p_down = Button(self, text="Down", command=self.move_down)
-        p_down.grid(row=5, column=1)
+        grid_bigger.grid(row=4, column=1)
 
     def move_down(self):
         self.player_position[1] += 1
-        print('You changed the Position')  # Debug Purposes
+        print('You changed the Position')
+        self.play_grid()
+
+    def move_up(self):
+        self.player_position[1] -= 1
+        print('You changed the Position')
+        self.play_grid()
+
+    def move_left(self):
+        self.player_position[0] -= 1
+        print('You changed the Position')
+        self.play_grid()
+
+    def move_right(self):
+        self.player_position[0] += 1
+        print('You changed the Position')
         self.play_grid()
 
     def update_grid_size_up(self):
-        self.grid_size += 5  # Needs x, y offset based on location (grid_size x player location) ?
+        self.grid_size += 5
         self.play_grid()
 
     def update_grid_size_down(self):
@@ -140,11 +152,23 @@ class ControlFrame(Frame):
         self.master = master
         self.center_grid = center_grid
 
-        show_weapon = Button(self, text="Move Down", command=self.move_down)
-        show_weapon.grid(row=0)
+        # Player Movement Buttons
+        blankframe = Frame(self)
+        blankframe.grid(row=0, column=0)  # Spacer
+        show_weapon = Button(self, text="^", command=self.center_grid.move_up)
+        show_weapon.grid(row=0, column=1)
+        show_weapon = Button(self, text="<", command=self.center_grid.move_left)
+        show_weapon.grid(row=1, column=0)
+        blankframe.grid(row=1, column=1)  # Spacer
+        show_weapon = Button(self, text=">", command=self.center_grid.move_right)
+        show_weapon.grid(row=1, column=2)
+        blankframe.grid(row=2, column=0)  # Spacer
+        show_weapon = Button(self, text="v", command=self.center_grid.move_down)
+        show_weapon.grid(row=2, column=1)
 
-    def move_down(self):
-        self.center_grid.move_down()
+
+
+
 
 class MainAppFrame(Frame):
     """Initialize main window"""
