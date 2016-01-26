@@ -64,13 +64,14 @@ class PlayerFrame(Frame):
 
 class CenterGrid(Frame):
     """Define Center Play Grid"""
-    player_position = [0, 0]
+    player_position = [12, 7]
 
     def __init__(self, master, *args):
         Frame.__init__(self, master)
         self.master = master
         self.grid_size = 20
         self.play_grid()
+
 
     def play_grid(self):
         """Area in Center"""
@@ -102,6 +103,7 @@ class CenterGrid(Frame):
         grid_smaller.grid(row=4)
         grid_bigger = Button(self, text="Grid+", command=self.update_grid_size_up)
         grid_bigger.grid(row=4, column=1)
+
 
     def move_down(self):
         self.player_position[1] += 1
@@ -147,10 +149,11 @@ class EnemyFrame(Frame):
 
 
 class ControlFrame(Frame):
-    def __init__(self, master, center_grid):
+    def __init__(self, master, center_grid, mainapp):
         Frame.__init__(self, master)
         self.master = master
         self.center_grid = center_grid
+        self.mainapp = mainapp
 
         # Player Movement Buttons
         blankframe = Frame(self)
@@ -166,8 +169,8 @@ class ControlFrame(Frame):
         show_weapon = Button(self, text="v", command=self.center_grid.move_down)
         show_weapon.grid(row=2, column=1)
 
-
-
+        #show_weapon = Button(self, text="test", command=self.mainapp.modify_p1())
+        #show_weapon.grid(row=2, column=2)
 
 
 class MainAppFrame(Frame):
@@ -175,11 +178,32 @@ class MainAppFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
+        self.self = self
         self.player_frame = PlayerFrame(master)
         self.center_grid = CenterGrid(master)
         self.enemy_frame = EnemyFrame(master)
-        self.control_frame = ControlFrame(master, self.center_grid)
+        self.control_frame = ControlFrame(master, self.center_grid, self)
         self.mainUI()
+
+        player_1 = self.player_1()
+        print(player_1.x)
+        self.modify_p1(player_1)
+
+
+
+    def print_stats_test(self, player_1):
+        print(player_1.name)
+        print(player_1.level)
+        print(player_1.x)
+        print(player_1.y)
+
+    def modify_p1(self, player_1):
+        player_1.x += 1
+        print(player_1.x)
+
+
+
+
 
     def mainUI(self):
         """Main Window Layout"""
@@ -199,6 +223,15 @@ class MainAppFrame(Frame):
 
     def exit(self):
         self.quit()
+
+    # Create dummy character - will change once GUI is completed
+    def player_1(self):
+        print('You created a Dude')
+        player_name = 'Test Guy 1'
+        player_race = human_race
+        player_class = fighter
+        stats = AbilityStats(common=10)
+        return Player(player_name, player_race, Class(player_class), stats)
 
 
 class AbilityStats:
@@ -300,6 +333,8 @@ class Player:
     def get_loc(self):
         location = (self.x, self.y)
         return location
+
+
 
 
 # ********************************FUNCTIONS********************************
